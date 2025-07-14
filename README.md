@@ -16,15 +16,13 @@ This project uses [Gluestack UI](https://ui.gluestack.io/) for its component lib
 
 ## Screenshots
 
-> Replace the image links below with your own screenshots from the app (e.g., from the Expo Go app or emulator). Place your images in an `assets/screenshots/` directory and update the paths accordingly.
-
-| Home Page                | Movie Details Page         | Login Screen             |
+| Home Page                | Movie Details Page         | Bookmarks Page           |
 |-------------------------|---------------------------|--------------------------|
-| ![Home](assets/screenshots/home.png) | ![Details](assets/screenshots/details.png) | ![Login](assets/screenshots/login.png) |
+| ![Home](assets/screenshots/4.jpg) | ![Details](assets/screenshots/2.jpg) | ![Bookmarks](assets/screenshots/1.jpg) |
 
-| Signup Screen            | Continue Watching         | Trending Trailers        |
+| Continue Watching        | Trending Trailers         | (Add more as needed)     |
 |-------------------------|---------------------------|--------------------------|
-| ![Signup](assets/screenshots/signup.png) | ![Continue Watching](assets/screenshots/continue-watching.png) | ![Trending Trailers](assets/screenshots/trending-trailers.png) |
+| ![Continue Watching](assets/screenshots/3.jpg) | ![Trending Trailers](assets/screenshots/3.jpg) |  |
 
 ---
 
