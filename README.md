@@ -16,10 +16,14 @@ This project uses [Gluestack UI](https://ui.gluestack.io/) for its component lib
 
 ## Screenshots
 
-![Screenshot 1](assets/screenshots/4.jpg)
-![Screenshot 2](assets/screenshots/2.jpg)
-![Screenshot 3](assets/screenshots/1.jpg)
-![Screenshot 4](assets/screenshots/3.jpg)
+<p align="center">
+  <img src="assets/screenshots/4.jpg" width="30%" />
+  <img src="assets/screenshots/2.jpg" width="30%" />
+  <img src="assets/screenshots/1.jpg" width="30%" />
+</p>
+<p align="center">
+  <img src="assets/screenshots/3.jpg" width="30%" />
+</p>
 
 ---
 
