@@ -19,8 +19,6 @@ A React Native movie app built with Expo.
   <img src="assets/screenshots/3.jpg" width="24%" />
 </p>
 
----
-
 ## Getting Started
 
 ### 1. Install Dependencies
