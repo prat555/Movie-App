@@ -10,19 +10,13 @@ A React Native movie app built with Expo.
 - Modern UI with dark theme
 - Responsive design
 
-## UI Library
-
-This project uses [Gluestack UI](https://ui.gluestack.io/) for its component library and styling. Gluestack provides accessible, customizable, and themeable React Native components for building modern UIs efficiently.
-
 ## Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/4.jpg" width="30%" />
-  <img src="assets/screenshots/2.jpg" width="30%" />
-  <img src="assets/screenshots/1.jpg" width="30%" />
-</p>
-<p align="center">
-  <img src="assets/screenshots/3.jpg" width="30%" />
+  <img src="assets/screenshots/4.jpg" width="24%" />
+  <img src="assets/screenshots/2.jpg" width="24%" />
+  <img src="assets/screenshots/1.jpg" width="24%" />
+  <img src="assets/screenshots/3.jpg" width="24%" />
 </p>
 
 ---
