@@ -30,7 +30,7 @@ npm install
 ### 2. Start the App
 
 ```bash
-npm start
+npx expo start
 ```
 
 ## Project Structure
