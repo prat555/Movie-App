@@ -16,13 +16,10 @@ This project uses [Gluestack UI](https://ui.gluestack.io/) for its component lib
 
 ## Screenshots
 
-| Home Page                | Movie Details Page         | Bookmarks Page           |
-|-------------------------|---------------------------|--------------------------|
-| ![Home](assets/screenshots/4.jpg) | ![Details](assets/screenshots/2.jpg) | ![Bookmarks](assets/screenshots/1.jpg) |
-
-| Continue Watching        | Trending Trailers         | (Add more as needed)     |
-|-------------------------|---------------------------|--------------------------|
-| ![Continue Watching](assets/screenshots/3.jpg) | ![Trending Trailers](assets/screenshots/3.jpg) |  |
+![Screenshot 1](assets/screenshots/4.jpg)
+![Screenshot 2](assets/screenshots/2.jpg)
+![Screenshot 3](assets/screenshots/1.jpg)
+![Screenshot 4](assets/screenshots/3.jpg)
 
 ---
 
