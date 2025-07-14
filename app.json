@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Yandex",
-    "slug": "Yandex",
+    "name": "Xyz",
+    "slug": "xyz",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "yandex",
+    "scheme": "xyz",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
