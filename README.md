@@ -1,15 +1,28 @@
 # Movie App
 
-A React Native movie app built with Expo, powered by TMDB API and Firebase authentication.
+A React Native movie application built with Expo, featuring real-time movie data from TMDB API and secure authentication through Firebase.
 
 ## Features
 
-- **Real Movie Data**: Browse movies using the TMDB API
-- **User Authentication**: Secure login/signup with Firebase
-- **Movie Details**: Comprehensive information including cast, crew, ratings
-- **Personalization**: Like and save your favorite movies
-- **Modern UI**: Dark theme with responsive design
-- **Offline Support**: Cached data for better performance
+- **Real-time Movie Data**:
+  - Trending movies section
+  - Popular movies showcase
+  - Top-rated movies collection
+  - Comprehensive movie details including runtime and ratings
+  - Movie search functionality
+
+- **User Features**:
+  - Firebase Authentication for secure login/signup
+  - Personal watchlist and bookmarks
+  - Continue watching progress tracking
+  - Watch history
+
+- **Modern UI/UX**:
+  - Sleek dark theme interface
+  - Carousel for featured movies
+  - Category filtering
+  - Pull-to-refresh functionality
+  - Responsive layout for different devices
 
 ## Screenshots
 
@@ -20,73 +33,63 @@ A React Native movie app built with Expo, powered by TMDB API and Firebase authe
   <img src="assets/screenshots/3.jpg" width="24%" />
 </p>
 
-## Getting Started
+## Project Structure
+
+```
+├── app/                    # Main application screens
+│   ├── _layout.tsx        # App layout configuration
+│   ├── index.tsx          # Home screen
+│   ├── all-movies.tsx     # Movies listing
+│   ├── movie-details.tsx  # Movie details screen
+│   ├── bookmarks.tsx      # User bookmarks
+│   ├── login.tsx          # Authentication screens
+│   └── signup.tsx
+├── components/            # Reusable components
+│   └── ui/               # UI components
+├── lib/                  # Core functionality
+│   └── tmdb.ts          # TMDB API integration
+└── assets/              # Static assets
+```
+
+## Setup Instructions
 
 ### Prerequisites
 
+- Node.js and npm installed
 - TMDB API key (get from [TMDB](https://www.themoviedb.org/settings/api))
-- Firebase configuration (set up at [Firebase Console](https://console.firebase.google.com/))
+- Firebase project setup (create at [Firebase Console](https://console.firebase.google.com/))
 
-### 1. Installation
+### Installation
 
+1. Clone the repository
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-### 2. Environment Setup
-
-Create a `.env` file in the root directory with your API keys:
-
+3. Create a `.env` file in the root directory:
 ```env
-TMDB_API_KEY=your_tmdb_api_key_here
-FIREBASE_API_KEY=your_firebase_config_values
-FIREBASE_AUTH_DOMAIN=your_firebase_config_values
-FIREBASE_PROJECT_ID=your_firebase_config_values
-# Add other Firebase config values as needed
+TMDB_ACCESS_TOKEN=your_tmdb_access_token
+TMDB_API_KEY=your_tmdb_api_key
+TMDB_BASE_URL=https://api.themoviedb.org/3
 ```
 
-### 3. Start the App
-
+4. Start the development server:
 ```bash
 npx expo start
 ```
 
-## Project Structure
+## API Integration
 
-```
-├── app/
-│   ├── _layout.tsx
-│   ├── index.tsx
-│   ├── movie-details.tsx
-│   └── auth/               # Authentication screens
-│       ├── login.tsx
-│       └── signup.tsx
-├── components/
-│   └── ui/
-├── services/
-│   ├── tmdb.ts             # TMDB API service
-│   └── firebase.ts         # Firebase service
-└── hooks/                  # Custom hooks
-    ├── use-auth.ts
-    └── use-movies.ts
-```
-
-## Key Technologies
-
-- **React Native** with **Expo** for cross-platform development
-- **TMDB API** for real movie data
-- **Firebase Authentication** for secure user management
-- **React Navigation** for seamless screen transitions
-- **React Query** for efficient data fetching and caching
-
-## Configuration
-
-To use this app, you'll need to:
-
-1. Create a TMDB account and get an API key
-2. Set up a Firebase project and configure Authentication
-3. Add your configuration details to the `.env` file
+The app uses the following TMDB API endpoints:
+- Trending movies
+- Popular movies
+- Top-rated movies
+- Movie details
+- Movie credits
+- Movie videos
+- Search functionality
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss proposed changes.
