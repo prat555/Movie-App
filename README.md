@@ -1,77 +1,93 @@
-# Movie App
+# 🎬 Xylo Movie App - React Native
 
-A React Native movie application built with Expo, featuring real-time movie data from TMDB API and secure authentication through Firebase.
+A feature-rich React Native movie application built with Expo, powered by TMDB API and Firebase Authentication.
 
-## Features
+![App Screenshots](assets/screenshots/1.jpg)
 
-- **Real-time Movie Data**:
-  - Trending movies section
-  - Popular movies showcase
-  - Top-rated movies collection
-  - Comprehensive movie details including runtime and ratings
-  - Movie search functionality
+## ✨ Key Features
 
-- **User Features**:
-  - Firebase Authentication for secure login/signup
-  - Personal watchlist and bookmarks
-  - Continue watching progress tracking
-  - Watch history
+### 🎥 Movie Discovery
+- **Trending, Popular & Top-rated** movies sections
+- **Detailed movie pages** with runtime, ratings, cast, and trailers
+- **Advanced search** with filters
+- **Watch trailers** directly in-app
 
-- **Modern UI/UX**:
-  - Sleek dark theme interface
-  - Carousel for featured movies
-  - Category filtering
-  - Pull-to-refresh functionality
-  - Responsive layout for different devices
+### 🔒 User Experience
+- **Secure authentication** with Firebase
+- **Personalized watchlist** and bookmarks
+- **Continue watching** progress tracking
+- **Viewing history** log
 
-## Screenshots
+### 🎨 Modern UI/UX
+- **Dark theme** interface with smooth animations
+- **Interactive carousels** for featured content
+- **Responsive design** for all device sizes
+- **Intuitive navigation** and gestures
 
-<p align="center">
-  <img src="assets/screenshots/4.jpg" width="24%" />
-  <img src="assets/screenshots/2.jpg" width="24%" />
-  <img src="assets/screenshots/1.jpg" width="24%" />
-  <img src="assets/screenshots/3.jpg" width="24%" />
-</p>
+## 📸 Screenshots
 
-## Project Structure
+<div align="center">
+  <img src="assets/screenshots/4.jpg" width="24%" alt="Home Screen" />
+  <img src="assets/screenshots/2.jpg" width="24%" alt="Movie Details" />
+  <img src="assets/screenshots/1.jpg" width="24%" alt="Search" />
+  <img src="assets/screenshots/3.jpg" width="24%" alt="Watchlist" />
+</div>
 
+## 🏗 Project Structure
+
+```bash
+movie-app/
+├── app/                  # Main application screens
+│   ├── _layout.tsx       # Root layout
+│   ├── index.tsx         # Home screen
+│   ├── all-movies.tsx    # Movies catalog
+│   ├── movie-details.tsx # Single movie view
+│   ├── bookmarks.tsx     # Saved content
+│   └── auth/            # Authentication flows
+├── components/           # Reusable components
+│   ├── movie/           # Movie components
+│   └── ui/              # UI elements
+├── lib/                  # Core services
+│   ├── tmdb.ts          # TMDB API client
+│   └── firebase.ts      # Firebase integration
+├── constants/           # App constants
+├── hooks/               # Custom hooks
+└── assets/              # Static resources
 ```
-├── app/                    # Main application screens
-│   ├── _layout.tsx        # App layout configuration
-│   ├── index.tsx          # Home screen
-│   ├── all-movies.tsx     # Movies listing
-│   ├── movie-details.tsx  # Movie details screen
-│   ├── bookmarks.tsx      # User bookmarks
-│   ├── login.tsx          # Authentication screens
-│   └── signup.tsx
-├── components/            # Reusable components
-│   └── ui/               # UI components
-├── lib/                  # Core functionality
-│   └── tmdb.ts          # TMDB API integration
-└── assets/              # Static assets
-```
 
-## Setup Instructions
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js and npm installed
-- TMDB API key (get from [TMDB](https://www.themoviedb.org/settings/api))
-- Firebase project setup (create at [Firebase Console](https://console.firebase.google.com/))
+- Node.js v16+
+- Expo CLI (`npm install -g expo-cli`)
+- TMDB API key ([Get yours](https://www.themoviedb.org/settings/api))
+- Firebase project ([Setup guide](https://firebase.google.com/docs/web/setup))
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/movie-app.git
+cd movie-app
+```
+
 2. Install dependencies:
 ```bash
 npm install
+# or
+yarn install
 ```
 
-3. Create a `.env` file in the root directory:
+3. Configure environment variables:
+```bash
+cp .env.example .env
+```
+Edit `.env` with your credentials:
 ```env
-TMDB_ACCESS_TOKEN=your_tmdb_access_token
-TMDB_API_KEY=your_tmdb_api_key
-TMDB_BASE_URL=https://api.themoviedb.org/3
+TMDB_API_KEY=your_api_key_here
+FIREBASE_API_KEY=your_firebase_config
+# ... other Firebase configs
 ```
 
 4. Start the development server:
@@ -79,17 +95,18 @@ TMDB_BASE_URL=https://api.themoviedb.org/3
 npx expo start
 ```
 
-## API Integration
+## 🌐 API Integration
 
-The app uses the following TMDB API endpoints:
-- Trending movies
-- Popular movies
-- Top-rated movies
-- Movie details
-- Movie credits
-- Movie videos
-- Search functionality
+The app leverages TMDB's comprehensive API:
 
-## Contributing
+| Endpoint | Description |
+|----------|-------------|
+| `/trending` | Daily/weekly trending content |
+| `/movie/popular` | Currently popular movies |
+| `/movie/top_rated` | Highest rated movies |
+| `/movie/{id}` | Detailed movie information |
+| `/search/movie` | Movie search functionality |
 
-Pull requests are welcome. For major changes, please open an issue first to discuss proposed changes.
+## 📜 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
