@@ -2,8 +2,6 @@
 
 A feature-rich React Native movie application built with Expo, powered by TMDB API and Firebase Authentication.
 
-![App Screenshots](assets/screenshots/1.jpg)
-
 ## ✨ Key Features
 
 ### 🎥 Movie Discovery
