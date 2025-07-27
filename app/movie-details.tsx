@@ -9,6 +9,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { formatMovieWithDetails } from '@/lib/tmdb';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
     ArrowLeft,
@@ -21,55 +22,10 @@ import {
     Star,
     Youtube
 } from "lucide-react-native";
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Linking } from 'react-native';
 
-// Mock movie data
-const movieData = {
-  id: 1,
-  title: "Dune: Part Two",
-  poster: "https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=400&h=600&fit=crop",
-  backdrop: "https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=800&h=400&fit=crop",
-  rating: 8.5,
-  genre: "Sci-Fi",
-  duration: "166 min",
-  year: "2024",
-  director: "Denis Villeneuve",
-  cast: [
-    {
-      name: "Timothée Chalamet",
-      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-    },
-    {
-      name: "Zendaya",
-      photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face"
-    },
-    {
-      name: "Rebecca Ferguson",
-      photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
-    },
-    {
-      name: "Javier Bardem",
-      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face"
-    },
-    {
-      name: "Josh Brolin",
-      photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face"
-    },
-    {
-      name: "Stellan Skarsgård",
-      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-    },
-    {
-      name: "Charlotte Rampling",
-      photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
-    }
-  ],
-  description: "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family. As he tries to prevent a terrible future, he must reconcile the loves of his life with the fate of the universe.",
-  longDescription: "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family. As he tries to prevent a terrible future, he must reconcile the loves of his life with the fate of the universe. The film explores themes of destiny, power, and the consequences of choice in a complex political landscape.",
-  trailerUrl: "https://www.youtube.com/watch?v=U2Qp5pL3ovA",
-  liked: false
-};
+
 
 export default function MovieDetails() {
   const router = useRouter();
@@ -82,8 +38,10 @@ export default function MovieDetails() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   
-  // Use mock data
-  const movie = movieData;
+  // State for movie data
+  const [movie, setMovie] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDownload = () => {
     setIsDownloading(true);
@@ -94,11 +52,53 @@ export default function MovieDetails() {
     }, 2000);
   };
 
+  // Fetch movie details from TMDB API
+  useEffect(() => {
+    const fetchMovieDetails = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const movieData = await formatMovieWithDetails(movieId);
+        setMovie(movieData);
+      } catch (err) {
+        console.error('Error fetching movie details:', err);
+        setError('Failed to load movie details. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovieDetails();
+  }, [movieId]);
+
   const handleWatchTrailer = () => {
-    if (movie.trailerUrl) {
+    if (movie?.trailerUrl) {
       Linking.openURL(movie.trailerUrl);
     }
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <Box className="flex-1 bg-gray-950 items-center justify-center">
+        <Text className="text-white text-lg">Loading movie details...</Text>
+      </Box>
+    );
+  }
+
+  // Show error state
+  if (error || !movie) {
+    return (
+      <Box className="flex-1 bg-gray-950 items-center justify-center px-4">
+        <Text className="text-red-400 text-lg text-center mb-4">
+          {error || 'Movie not found'}
+        </Text>
+        <Button className="bg-blue-500" onPress={() => router.back()}>
+          <ButtonText className="text-white">Go Back</ButtonText>
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box className="flex-1 bg-gray-950">

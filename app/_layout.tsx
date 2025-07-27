@@ -1,4 +1,5 @@
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { UserProvider } from "@/lib/userContext";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -6,9 +7,10 @@ import "./global.css";
 
 export default function RootLayout() {
   return (
-    <GluestackUIProvider mode="light">
-      <StatusBar style="light" />
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#0a0a0a' }} edges={['bottom']}>
+    <UserProvider>
+      <GluestackUIProvider mode="light">
+        <StatusBar style="light" />
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#0a0a0a' }} edges={['bottom']}>
         <Stack>
           <Stack.Screen
             name="index"
@@ -55,5 +57,6 @@ export default function RootLayout() {
         </Stack>
       </SafeAreaView>
     </GluestackUIProvider>
+    </UserProvider>
   );
 }

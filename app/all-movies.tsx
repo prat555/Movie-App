@@ -1,5 +1,6 @@
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
@@ -8,6 +9,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { tmdbAPI } from '@/lib/tmdb';
 import { useRouter } from 'expo-router';
 import {
   ArrowLeft,
@@ -18,121 +20,7 @@ import {
   Search,
   Star
 } from "lucide-react-native";
-import React, { useMemo, useState } from 'react';
-
-// Mock data for all movies
-const allMovies = [
-  {
-    id: 1,
-    title: "Dune: Part Two",
-    poster: "https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=400&h=600&fit=crop",
-    rating: 8.5,
-    genre: "Sci-Fi",
-    duration: "166 min",
-    year: "2024",
-    description: "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.",
-    trending: true
-  },
-  {
-    id: 2,
-    title: "Top Gun: Maverick",
-    poster: "https://images.unsplash.com/photo-1489599815540-4c069a1e3ea0?w=400&h=600&fit=crop",
-    rating: 8.2,
-    genre: "Action",
-    duration: "130 min",
-    year: "2022",
-    description: "After more than thirty years of service as one of the Navy's top aviators, Pete Mitchell is where he belongs.",
-    trending: true
-  },
-  {
-    id: 3,
-    title: "Avatar: The Way of Water",
-    poster: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=600&fit=crop",
-    rating: 7.6,
-    genre: "Adventure",
-    duration: "192 min",
-    year: "2022",
-    description: "Jake Sully lives with his newfound family formed on the extrasolar moon Pandora.",
-    trending: true
-  },
-  {
-    id: 4,
-    title: "Spider-Man: No Way Home",
-    poster: "https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=400&h=600&fit=crop",
-    rating: 8.4,
-    genre: "Adventure",
-    duration: "148 min",
-    year: "2021",
-    description: "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help.",
-    trending: true
-  },
-  {
-    id: 5,
-    title: "No Time to Die",
-    poster: "https://images.unsplash.com/photo-1489599815540-4c069a1e3ea0?w=400&h=600&fit=crop",
-    rating: 7.3,
-    genre: "Action",
-    duration: "163 min",
-    year: "2021",
-    description: "James Bond has left active service. His peace is short-lived when Felix Leiter turns up asking for help.",
-    trending: false
-  },
-  {
-    id: 6,
-    title: "The Batman",
-    poster: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop",
-    rating: 7.8,
-    genre: "Action",
-    duration: "176 min",
-    year: "2022",
-    description: "When the Riddler, a sadistic serial killer, begins murdering key political figures in Gotham.",
-    trending: false
-  },
-  {
-    id: 7,
-    title: "Black Panther: Wakanda Forever",
-    poster: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=600&fit=crop",
-    rating: 7.2,
-    genre: "Adventure",
-    duration: "161 min",
-    year: "2022",
-    description: "The people of Wakanda fight to protect their home from intervening world powers.",
-    trending: false
-  },
-  {
-    id: 8,
-    title: "Doctor Strange in the Multiverse of Madness",
-    poster: "https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=400&h=600&fit=crop",
-    rating: 7.0,
-    genre: "Adventure",
-    duration: "126 min",
-    year: "2022",
-    description: "Dr. Stephen Strange casts a forbidden spell that opens the doorway to the multiverse.",
-    trending: false
-  },
-  {
-    id: 9,
-    title: "Thor: Love and Thunder",
-    poster: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop",
-    rating: 6.8,
-    genre: "Adventure",
-    duration: "119 min",
-    year: "2022",
-    description: "Thor enlists the help of Valkyrie, Korg and ex-girlfriend Jane Foster to fight Gorr the God Butcher.",
-    trending: false
-  },
-  {
-    id: 10,
-    title: "Black Adam",
-    poster: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=600&fit=crop",
-    rating: 6.3,
-    genre: "Action",
-    duration: "125 min",
-    year: "2022",
-    description: "Nearly 5,000 years after he was bestowed with the almighty powers of the Egyptian gods.",
-    trending: false
-  }
-];
+import React, { useEffect, useMemo, useState } from 'react';
 
 const categories = ["All", "Action", "Adventure", "Drama", "Sci-Fi", "Comedy", "Horror", "Romance"];
 
@@ -142,6 +30,11 @@ export default function AllMovies() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [bookmarkedMovies, setBookmarkedMovies] = useState<number[]>([2, 4, 5]);
   const [sortBy, setSortBy] = useState<"rating" | "year" | "title">("rating");
+  
+  // State for API data
+  const [allMovies, setAllMovies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const filteredAndSortedMovies = useMemo(() => {
     let filtered = allMovies.filter(movie => {
@@ -168,6 +61,28 @@ export default function AllMovies() {
     return filtered;
   }, [searchQuery, selectedCategory, sortBy]);
 
+  // Fetch movies from TMDB API
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch popular movies for the all movies page
+        const movies = await tmdbAPI.getPopularMovies(1);
+        setAllMovies(movies);
+        
+      } catch (err) {
+        console.error('Error fetching movies:', err);
+        setError('Failed to load movies. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
   const toggleBookmark = (movieId: number) => {
     setBookmarkedMovies(prev => 
       prev.includes(movieId) 
@@ -179,6 +94,27 @@ export default function AllMovies() {
   const navigateToMovieDetails = (movieId: number) => {
     router.push(`/movie-details?id=${movieId}`);
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <Box className="flex-1 bg-gray-950 items-center justify-center">
+        <Text className="text-white text-lg">Loading movies...</Text>
+      </Box>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <Box className="flex-1 bg-gray-950 items-center justify-center px-4">
+        <Text className="text-red-400 text-lg text-center mb-4">{error}</Text>
+        <Button className="bg-blue-500" onPress={() => window.location.reload()}>
+          <ButtonText className="text-white">Retry</ButtonText>
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box className="flex-1 bg-gray-950">

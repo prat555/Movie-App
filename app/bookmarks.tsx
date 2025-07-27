@@ -9,75 +9,102 @@ import { Pressable } from "@/components/ui/pressable";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { tmdbAPI } from '@/lib/tmdb';
+import { useUser } from '@/lib/userContext';
 import { useRouter } from 'expo-router';
 import {
-    ArrowLeft,
-    Bookmark,
-    Calendar,
-    Clock,
-    Star
+  ArrowLeft,
+  Bookmark,
+  Calendar,
+  Clock,
+  Star
 } from "lucide-react-native";
-import React, { useState } from 'react';
-
-// Mock bookmarked movies data
-const bookmarkedMovies = [
-  {
-    id: 2,
-    title: "Top Gun: Maverick",
-    poster: "https://images.unsplash.com/photo-1489599815540-4c069a1e3ea0?w=400&h=600&fit=crop",
-    rating: 8.2,
-    genre: "Action",
-    duration: "130 min",
-    year: "2022",
-    description: "After more than thirty years of service as one of the Navy's top aviators, Pete Mitchell is where he belongs, pushing the envelope as a courageous test pilot.",
-    liked: true
-  },
-  {
-    id: 4,
-    title: "Spider-Man: No Way Home",
-    poster: "https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=400&h=600&fit=crop",
-    rating: 8.4,
-    genre: "Adventure",
-    duration: "148 min",
-    year: "2021",
-    description: "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear.",
-    liked: true
-  },
-  {
-    id: 5,
-    title: "Avatar: The Way of Water",
-    poster: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=600&fit=crop",
-    rating: 7.6,
-    genre: "Adventure",
-    duration: "192 min",
-    year: "2022",
-    description: "Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a familiar threat returns to finish what was previously started.",
-    liked: true
-  },
-  {
-    id: 7,
-    title: "No Time to Die",
-    poster: "https://images.unsplash.com/photo-1489599815540-4c069a1e3ea0?w=400&h=600&fit=crop",
-    rating: 7.3,
-    genre: "Action",
-    duration: "163 min",
-    year: "2021",
-    description: "James Bond has left active service. His peace is short-lived when Felix Leiter, an old friend from the CIA, turns up asking for help.",
-    liked: true
-  }
-];
+import React, { useEffect, useState } from 'react';
 
 export default function Bookmarks() {
   const router = useRouter();
-  const [bookmarks, setBookmarks] = useState(bookmarkedMovies);
+  const { getBookmarks, toggleBookmark } = useUser();
+  const [bookmarkedMovies, setBookmarkedMovies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch bookmarked movies from TMDB API
+  useEffect(() => {
+    const fetchBookmarkedMovies = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const bookmarkIds = getBookmarks();
+        if (bookmarkIds.length === 0) {
+          setBookmarkedMovies([]);
+          return;
+        }
+
+        // Fetch movie details for each bookmarked movie
+        const movies = await Promise.all(
+          bookmarkIds.map(async (movieId) => {
+            try {
+              const movie = await tmdbAPI.getMovieDetails(movieId);
+              return {
+                id: movie.id,
+                title: movie.title,
+                poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                rating: Math.round(movie.vote_average * 10) / 10,
+                genre: movie.genres[0]?.name || 'Unknown',
+                duration: movie.runtime ? `${movie.runtime} min` : 'Unknown',
+                year: movie.release_date ? movie.release_date.split('-')[0] : 'Unknown',
+                description: movie.overview,
+                liked: true
+              };
+            } catch (error) {
+              console.error(`Error fetching movie ${movieId}:`, error);
+              return null;
+            }
+          })
+        );
+
+        setBookmarkedMovies(movies.filter(movie => movie !== null));
+      } catch (err) {
+        console.error('Error fetching bookmarked movies:', err);
+        setError('Failed to load bookmarks. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookmarkedMovies();
+  }, [getBookmarks]);
 
   const removeBookmark = (movieId: number) => {
-    setBookmarks(prev => prev.filter(movie => movie.id !== movieId));
+    toggleBookmark(movieId);
+    setBookmarkedMovies(prev => prev.filter(movie => movie.id !== movieId));
   };
 
   const navigateToMovieDetails = (movieId: number) => {
     router.push(`/movie-details?id=${movieId}`);
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <Box className="flex-1 bg-gray-950 items-center justify-center">
+        <Text className="text-white text-lg">Loading bookmarks...</Text>
+      </Box>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <Box className="flex-1 bg-gray-950 items-center justify-center px-4">
+        <Text className="text-red-400 text-lg text-center mb-4">{error}</Text>
+        <Button className="bg-blue-500" onPress={() => window.location.reload()}>
+          <ButtonText className="text-white">Retry</ButtonText>
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box className="flex-1 bg-gray-950">
@@ -103,9 +130,9 @@ export default function Bookmarks() {
       </Box>
 
       <ScrollView className="flex-1" contentContainerClassName="pb-6">
-        {bookmarks.length === 0 ? (
+        {bookmarkedMovies.length === 0 ? (
           <VStack className="flex-1 items-center justify-center px-4 py-12">
-            <Icon as={Bookmark} size="4xl" className="text-gray-600 mb-4" />
+            <Icon as={Bookmark} size="xl" className="text-gray-600 mb-4" />
             <Heading size="lg" className="text-gray-400 text-center mb-2">
               No bookmarks yet
             </Heading>
@@ -123,7 +150,7 @@ export default function Bookmarks() {
           </VStack>
         ) : (
           <VStack className="px-4 gap-4">
-            {bookmarks.map((movie) => (
+            {bookmarkedMovies.map((movie) => (
               <Pressable 
                 key={movie.id} 
                 className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50"
