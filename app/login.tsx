@@ -9,7 +9,7 @@ import { ScrollView } from "@/components/ui/scroll-view";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useRouter } from "expo-router";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { ArrowLeft, Eye, EyeOff, Lock, Mail } from "lucide-react-native";
 import React, { useState } from "react";
 import { Alert, Keyboard, TouchableWithoutFeedback, View } from "react-native";
@@ -29,6 +29,48 @@ export default function LoginScreen() {
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError("Please enter your email address first");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await sendPasswordResetEmail(auth, email);
+      Alert.alert(
+        "Password Reset Email Sent",
+        `We've sent a password reset link to ${email}. Please check your email and follow the instructions to reset your password.`,
+        [{ text: "OK" }]
+      );
+    } catch (e: any) {
+      let errorMessage = "Failed to send password reset email";
+      
+      switch (e.code) {
+        case 'auth/user-not-found':
+          errorMessage = "No account found with this email address";
+          break;
+        case 'auth/invalid-email':
+          errorMessage = "Invalid email address";
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = "Too many requests. Please try again later";
+          break;
+        default:
+          errorMessage = "Failed to send password reset email. Please try again";
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogin = async () => {
@@ -211,7 +253,7 @@ export default function LoginScreen() {
 
               {/* Forgot Password */}
               <HStack className="justify-center">
-                <Pressable onPress={() => Alert.alert("Forgot Password", "This feature is coming soon!")}>
+                <Pressable onPress={handleForgotPassword}>
                   <Text className="text-gray-500 text-sm">Forgot Password?</Text>
                 </Pressable>
               </HStack>
